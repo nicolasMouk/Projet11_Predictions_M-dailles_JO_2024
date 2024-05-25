@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <title>Projet de Prédiction des Médailles d'Or</title>
+</head>
+<body>
+    <div class="header">
+        <img src="{{ url_for('static', filename='images/LogoJO.png') }}" alt="Logo des JO" class="header-image">
+        <hr class="separator">
+    </div>
+    <h1 class="title">PREDICTION DU NOMBRE DE MEDAILLES D'OR DE LA FRANCE EN JUDO AUX JEUX OLYMPIQUES 2024</h1>
+    <img src="{{ url_for('static', filename='images/1ePhotoJO.jpg') }}" alt="Photo après titre" style="width: 760px; height: auto; display: block; margin: 0 auto;">
+    <div class="container">
+        <div class="category-list">
+            <h2 class="category-title">Catégories de Poids Hommes</h2>
+            <div class="category-buttons">
+                {% for category in categories_men %}
+                <a href="{{ url_for('afficher_judokas_par_categorie', categorie=category) }}">{{ category }}</a>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="category-list">
+            <h2 class="category-title">Catégories de Poids Femmes</h2>
+            <div class="category-buttons">
+                {% for category in categories_women %}
+                <a href="{{ url_for('afficher_judokas_par_categorie', categorie=category) }}">{{ category }}</a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

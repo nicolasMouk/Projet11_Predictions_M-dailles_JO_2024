@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <title>{{ categorie }}</title>
+</head>
+<body>
+    <div class="header">
+        <img src="{{ url_for('static', filename='images/LogoJO.png') }}" alt="Logo JO" class="header-logo">
+        <hr class="header-line">
+    </div>
+    <h1 style="text-align: center;">Catégorie {{ categorie }}</h1>
+    <div class="container">
+        <div class="top3">
+            <h2 style="text-align: center;">Prédiction du Top 3 de la Catégorie</h2>
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>Pays</th>
+                        <th>Nom Prénom</th>
+                        <th>Prédiction</th>
+                        <th>Podium</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                        {% for judoka in podium %}
+                        <tr>
+                            <td><img src="{{ url_for('static', filename='flags/' + judoka['Pays'].lower().replace(' ', '_') + '.png') }}" alt="{{ judoka['Pays'] }}" width="20"></td>
+                            <td>{{ judoka['Nom Prenom'] }}</td> 
+                            <td> {{judoka['predictions']}}</td>
+                            <td>{{ judoka['place fictive'] }} </td>
+                        </tr>
+                    {% endfor %}
+                        
+                    </ul>
+                </tbody>
+            </table>
+        </div>
+        <div class="category-image">
+            <img src="{{ url_for('static', filename='images/PictogrammeJudo.avif') }}" alt="Catégorie Image">
+        </div>
+    </div>
+    <h2 class="predict-title">Prédis le résultat de ton combat !</h2>
+    <div class="versus-container">
+        <form id="versus-form">
+            <div class="select-with-flags">
+                <select name="athlete1" id="athlete1">
+                    {% for judoka in judokas %}
+                        <option value="{{ judoka['Nom Prenom'] }}" data-flag="{{ url_for('static', filename='flags/' + judoka['Pays'].lower().replace(' ', '_') + '.png') }}">
+                            {{ judoka['Nom Prenom'] }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            VS
+            <div class="select-with-flags">
+                <select name="athlete2" id="athlete2">
+                    {% for judoka in judokas %}
+                        <option value="{{ judoka['Nom Prenom'] }}" data-flag="{{ url_for('static', filename='flags/' + judoka['Pays'].lower().replace(' ', '_') + '.png') }}">
+                            {{ judoka['Nom Prenom'] }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="button" onclick="predictWinner()" class="custom-button">Prédire</button>
+        </form>
+        <div id="winner" class="winner-result"></div>
+    </div>
+
+    <h2 class="category-title">Liste des Athlètes</h2>
+    <table class="athlete-table">
+        <tbody>
+            {% for judoka in judokas %}
+                <tr>
+                    <td><img src="{{ url_for('static', filename='flags/' + judoka['Pays'].lower().replace(' ', '_') + '.png') }}" alt="{{ judoka['Pays'] }}" width="20"></td>
+                    <td>{{ judoka['Nom Prenom'] }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+
+    <script>
+        // function predictWinner() {
+        //     const form = document.getElementById('versus-form');
+        //     const athlete1 = form.elements['athlete1'].value;
+        //     const athlete2 = form.elements['athlete2'].value;
+        //     const category = '{{ categorie }}';
+
+        //     fetch('/predict', {
+        //         method: 'POST',
+        //         headers: {
+        //             'Content-Type': 'application/json'
+        //         },
+        //         body: JSON.stringify({ athlete1, athlete2, category })
+        //     })
+        //     .then(response => response.json())
+        //     .then(data => {
+        //         if (data.error) {
+        //             alert(data.error);
+        //         } else {
+        //             document.getElementById('winner').innerText = 'Le gagnant est ' + data.winner + '!';
+        //         }
+        //     })
+        //     .catch(error => {
+        //         console.error('Error:', error);
+        //     });
+        // }
+
+        // document.addEventListener('DOMContentLoaded', () => {
+        //     const selects = document.querySelectorAll('.select-with-flags select');
+        //     selects.forEach(select => {
+        //         select.addEventListener('change', function() {
+        //             const flag = this.options[this.selectedIndex].dataset.flag;
+        //             const img = this.parentElement.querySelector('img');
+        //             if (img) {
+        //                 img.src = flag;
+        //             } else {
+        //                 const newImg = document.createElement('img');
+        //                 newImg.src = flag;
+        //                 newImg.width = 20;
+        //                 this.parentElement.appendChild(newImg);
+        //             }
+        //         });
+        //     });
+        // });
+
+        function predictWinner() {
+            const athlete1 = document.getElementById('athlete1').value;
+            const athlete2 = document.getElementById('athlete2').value;
+    
+            const formData = new FormData();
+            formData.append('athlete1', athlete1);
+            formData.append('athlete2', athlete2);
+    
+            fetch('/predict', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(`Après analyse de nos données, le gagnant de ce combat risque d'être remporté par : ${data.winner}`);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+</body>
+</html>
