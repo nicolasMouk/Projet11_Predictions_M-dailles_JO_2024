@@ -1,1 +1,1 @@
-# Projet11_Predictions_M-dailles_JO_2024
+# Projet11_Predictions_Medailles_JO_2024
