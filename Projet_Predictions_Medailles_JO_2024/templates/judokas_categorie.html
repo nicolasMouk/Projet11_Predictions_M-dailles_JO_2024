@@ -142,7 +142,7 @@
             })
             .then(response => response.json())
             .then(data => {
-                alert(`Après analyse de nos données, le gagnant de ce combat risque d'être remporté par : ${data.winner}`);
+                alert(`Après analyse de nos données, le gagnant de ce combat risque d'être : ${data.winner}`);
             })
             .catch(error => {
                 console.error('Error:', error);
